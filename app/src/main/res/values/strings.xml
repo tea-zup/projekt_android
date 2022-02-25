@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Prevozi</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Uporabnisko ime</string>
+    <string name="prompt_password">Geslo</string>
+    <string name="action_sign_in">Prijava</string>
+    <string name="action_sign_in_short">Prijava</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Neustrezno uporabnisko ime / geslo.</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="empty_fields">Vsa polja morajo biti izpolnjena!</string>
+    <string name="login_failed">"Prijava neuspesna."</string>
+</resources>
