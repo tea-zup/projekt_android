@@ -10,4 +10,10 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="empty_fields">Vsa polja morajo biti izpolnjena!</string>
     <string name="login_failed">"Prijava neuspesna."</string>
+
+    <string name="napaka_omrezje">Omrezje ni na voljo</string>
+    <string name="napaka_storitev">Napaka pri uporabi storitve</string>
+
+    <string name="rest_rezultat_dodan">"Rezultat vpisan!"</string>
+    <string name="rest_nepricakovan_odgovor">"Nepričakovan odgovor!"</string>
 </resources>

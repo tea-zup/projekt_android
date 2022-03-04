@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -24,9 +26,10 @@ import android.widget.Toast;
 
 import si.uni_lj.fe.seminar.prevozi.Main_page;
 import si.uni_lj.fe.seminar.prevozi.R;
-import si.uni_lj.fe.seminar.prevozi.ui.login.LoginViewModel;
-import si.uni_lj.fe.seminar.prevozi.ui.login.LoginViewModelFactory;
 import si.uni_lj.fe.seminar.prevozi.databinding.ActivityLoginBinding;
+import si.uni_lj.fe.seminar.prevozi.AsyncTaskExecutor;
+import android.view.inputmethod.InputMethodManager;
+
 
 import android.content.Intent;
 
@@ -34,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+
+    // referenca na glavno aktivnost (za uporabo v notranjih razredih)
+    LoginActivity activity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
+        this.activity = this;
+
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -123,7 +131,18 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+
+                //skrij tipkovnico
+                try {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
                 //preveri, ce sta user & pass ok
+                new AsyncTaskExecutor().execute(new VpisPrijavnihPodatkov(usernameEditText.getText().toString(), passwordEditText.getText().toString(), activity),
+                        (cookie) -> {auth_cookie_saved(cookie);});
+
                 Intent intent = new Intent(getApplicationContext(), Main_page.class); //pojdi na drugo aktivnost
                 startActivity(intent);
             }
@@ -138,5 +157,24 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    private void obvestiSToastom(String obvestilo){
+        Context context = getApplicationContext();
+        CharSequence text = obvestilo;
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    private void auth_cookie_saved(String ac){
+        Log.d("AC: ", ac);
+        if (ac.equals("404")){
+            obvestiSToastom("Napačno ime / geslo."); //toast ne dela...
+        }
+        else {
+            obvestiSToastom("Prijava uspešna.");
+        }
     }
 }
