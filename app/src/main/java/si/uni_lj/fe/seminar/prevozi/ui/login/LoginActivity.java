@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
     private void auth_cookie_saved(String ac){ //sharni auth_cookie v lokalno shrambo in preusmeri uporabnika v aplikacijo
 
         if (ac.equals("404")){
-            obvestiSToastom("Napačno ime / geslo."); //toast ne dela..
+            obvestiSToastom("Napačno ime / geslo."); //toast vcasih dela, ce ne dela naredi nov virutal device
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class); //osveži aktivnost
             startActivity(intent);
         }
