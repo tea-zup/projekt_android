@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -82,7 +84,8 @@ public class DobiRezervacije implements Callable<String> {
             Log.d("myTag", String.valueOf(e));
         }
         int response = conn.getResponseCode();
-        return convertStreamToString(conn.getInputStream());
+        String tmp = convertStreamToString(conn.getInputStream());
+        return JSONString2String(tmp);
     }
 
     private String convertStreamToString(InputStream is) {
@@ -105,5 +108,26 @@ public class DobiRezervacije implements Callable<String> {
             }
         }
         return sb.toString();
+    }
+
+    public String JSONString2String(String JsonString){ //za prikaz rezervacije
+        String seznam_rezervacij = "";
+        String podatki_rezervacije[] = {"Kraj odhoda", "Kraj prihoda", "Čas odhoda", "Št. oseb", "Način plačila", "Voznik"};
+        String podatki_rezervacije_tag[] = {"kraj_odhoda", "kraj_prihoda", "cas_odhoda", "st_oseb", "nacin_placila", "voznik"};
+        try {
+            JSONArray jsonArray = new JSONArray(JsonString);
+            for(int i=0; i<jsonArray.length()-2; i++){ //zadnji dve polji sta nacin id in voznik, tega ne prikazemo
+                for(int j=0; j<podatki_rezervacije.length; j++) {
+                    seznam_rezervacij += podatki_rezervacije[j];
+                    seznam_rezervacij += ": ";
+                    seznam_rezervacij += jsonArray.getJSONObject(i).getString(podatki_rezervacije_tag[j]);
+                    seznam_rezervacij += System.getProperty("line.separator");
+                }
+                seznam_rezervacij += System.getProperty("line.separator");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return seznam_rezervacij;
     }
 }
