@@ -2,6 +2,7 @@ package si.uni_lj.fe.seminar.prevozi.ui.login;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,12 +27,16 @@ import android.widget.Toast;
 
 import si.uni_lj.fe.seminar.prevozi.Main_page;
 import si.uni_lj.fe.seminar.prevozi.R;
+
 import si.uni_lj.fe.seminar.prevozi.databinding.ActivityLoginBinding;
 import si.uni_lj.fe.seminar.prevozi.AsyncTaskExecutor;
 import android.view.inputmethod.InputMethodManager;
 
 
 import android.content.Intent;
+
+import org.json.JSONObject;
+import si.uni_lj.fe.seminar.prevozi.Authentication;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -139,12 +144,13 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
+                //Shrani ime trenutnega uporabnika
+                Authentication.setAccessToken(activity, usernameEditText.getText().toString(), "CURRENT_USER");
+
                 //preveri, ce sta user & pass ok
                 new AsyncTaskExecutor().execute(new VpisPrijavnihPodatkov(usernameEditText.getText().toString(), passwordEditText.getText().toString(), activity),
                         (cookie) -> {auth_cookie_saved(cookie);});
 
-                Intent intent = new Intent(getApplicationContext(), Main_page.class); //pojdi na drugo aktivnost
-                startActivity(intent);
             }
         });
     }
@@ -162,19 +168,31 @@ public class LoginActivity extends AppCompatActivity {
     private void obvestiSToastom(String obvestilo){
         Context context = getApplicationContext();
         CharSequence text = obvestilo;
-        int duration = Toast.LENGTH_LONG;
+        int duration = Toast.LENGTH_SHORT;
 
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
 
-    private void auth_cookie_saved(String ac){
-        Log.d("AC: ", ac);
+    private void auth_cookie_saved(String ac){ //sharni auth_cookie v lokalno shrambo in preusmeri uporabnika v aplikacijo
+
         if (ac.equals("404")){
-            obvestiSToastom("Napačno ime / geslo."); //toast ne dela...
+            obvestiSToastom("Napačno ime / geslo."); //toast ne dela..
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class); //osveži aktivnost
+            startActivity(intent);
         }
         else {
+
+            try {
+                JSONObject ac_obj = new JSONObject(ac);
+                String auth_cookie = ac_obj.getString("auth_cookie");
+                Authentication.setAccessToken(this, auth_cookie, "AUTH_COOKIE");
+            } catch (Throwable t) {
+                Log.d("MyTag", "Could not parse malformed JSON: \"" + ac + "\"");
+            }
             obvestiSToastom("Prijava uspešna.");
+            Intent intent = new Intent(getApplicationContext(), Main_page.class); //pojdi na drugo aktivnost
+            startActivity(intent);
         }
     }
 }
