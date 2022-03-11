@@ -14,15 +14,20 @@
         android:theme="@style/Theme.Prevozi"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Moj_profil"
+            android:exported="true"
+            android:label="Moj profil"
+            android:parentActivityName=".Main_page" />
+        <activity
             android:name=".Main_page"
             android:exported="false"
-            android:parentActivityName=".ui.login.LoginActivity"
-            android:label="Moje rezervacije"/>
+            android:label="Moje rezervacije"
+            android:parentActivityName=".ui.login.LoginActivity" />
         <activity
             android:name=".Moje_ponudbe"
             android:exported="true"
-            android:parentActivityName=".Main_page"
-            android:label="Moje ponudbe"/>
+            android:label="Moje ponudbe"
+            android:parentActivityName=".Main_page" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:clickable="true"

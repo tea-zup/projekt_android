@@ -58,11 +58,11 @@ public class Main_page extends AppCompatActivity {
         String podatki_rezervacije[] = {"Kraj odhoda", "Kraj prihoda", "Čas odhoda", "Št. oseb", "Način plačila", "Voznik"};
         String podatki_rezervacije_tag[] = {"kraj_odhoda", "kraj_prihoda", "cas_odhoda", "st_oseb", "nacin_placila", "voznik"};
         String rezervacija = "";
-        String seznam_rezervacij[] = new String[7];
 
         try {
             JSONArray jsonArray = new JSONArray(JsonString);
-            for(int i=0; i<7; i++){ //zadnji dve polji sta id rezervacije in prevoza, tega ne prikazemo
+            String seznam_rezervacij[] = new String[jsonArray.length()];
+            for(int i=0; i<jsonArray.length(); i++){ //zadnji dve polji sta id rezervacije in prevoza, tega ne prikazemo
                 for(int j=0; j<podatki_rezervacije.length; j++) {
                     rezervacija += podatki_rezervacije[j];
                     rezervacija += ": ";
@@ -72,10 +72,11 @@ public class Main_page extends AppCompatActivity {
                 seznam_rezervacij[i] = rezervacija;
                 rezervacija = "";
             }
+            return seznam_rezervacij;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return seznam_rezervacij;
+        return new String[1]; //dummy value
     }
 
     public void fun (String rezultat) {
@@ -117,11 +118,13 @@ public class Main_page extends AppCompatActivity {
                 return true;
 
             case MENU_MOJE_PONUDBE:
-                Intent intent_moje_ponudbe= new Intent(this, Moje_ponudbe.class); //preusmeri na glavno stran = stran z rezervacijami
+                Intent intent_moje_ponudbe= new Intent(this, Moje_ponudbe.class);
                 startActivity(intent_moje_ponudbe);
                 return true;
 
             case MENU_MOJ_PROFIL:
+                Intent intent_moj_profil= new Intent(this, Moj_profil.class);
+                startActivity(intent_moj_profil);
                 return true;
 
             case MENU_ODJAVA:

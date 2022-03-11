@@ -44,7 +44,7 @@ public class Moje_ponudbe extends Main_page {
         try {
             JSONArray jsonArray = new JSONArray(JsonString);
             String seznam_rezervacij[] = new String[jsonArray.length()]; //id nas ne zanima
-            Log.d("myTagLen", String.valueOf(jsonArray.length()));
+
             for(int i=0; i<jsonArray.length(); i++){ //zadnji dve polji sta id rezervacije in prevoza, tega ne prikazemo
                 for(int j=0; j<podatki_rezervacije.length; j++) {
                     rezervacija += podatki_rezervacije[j];
@@ -63,15 +63,7 @@ public class Moje_ponudbe extends Main_page {
     }
     @Override //moje_ponudbe extends main_activity, ki ima tudi to funkcijo
     public void fun (String rezultat) {
-        Log.d("myTagRez", rezultat);
         listItem = JSONString2StringArray(rezultat);
-
-        try {
-            Log.d("Mytag3", listItem[0]);
-        }
-        catch (Exception e) {
-            Log.d("myTagErr", String.valueOf(e));
-        }
 
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.my_list, listItem);
