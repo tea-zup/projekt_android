@@ -3,7 +3,11 @@ package si.uni_lj.fe.seminar.prevozi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.ListView;
@@ -16,6 +20,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 import si.uni_lj.fe.seminar.prevozi.ui.login.LoginActivity;
+import si.uni_lj.fe.seminar.prevozi.Authentication;
 import si.uni_lj.fe.seminar.prevozi.DobiRezervacije;
 
 
@@ -25,6 +30,11 @@ public class Main_page extends AppCompatActivity {
     ListView listView;
     TextView textView;
     public String[] listItem;
+
+    private final int MENU_MOJE_REZERVACIJE = 0;
+    private final int MENU_MOJE_PONUDBE = 1;
+    private final int MENU_MOJ_PROFIL = 2;
+    private final int MENU_ODJAVA = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,5 +93,45 @@ public class Main_page extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        menu.add(0, MENU_MOJE_REZERVACIJE, 0, "Moje rezervacije");
+        menu.add(0, MENU_MOJE_PONUDBE, 0, "Moje ponudbe");
+        menu.add(0, MENU_MOJ_PROFIL, 0, "Moj profil");
+        menu.add(0, MENU_ODJAVA, 0, "Odjava");
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // switch stavek z testiranjem menijske postavke,ki je bila izbrana
+        switch (item.getItemId()) {
+            case MENU_MOJE_REZERVACIJE:
+                Intent intent_main = new Intent(this, Main_page.class); //preusmeri na glavno stran = stran z rezervacijami
+                startActivity(intent_main);
+                return true;
+
+            case MENU_MOJE_PONUDBE:
+                Intent intent_moje_ponudbe= new Intent(this, Moje_ponudbe.class); //preusmeri na glavno stran = stran z rezervacijami
+                startActivity(intent_moje_ponudbe);
+                return true;
+
+            case MENU_MOJ_PROFIL:
+                return true;
+
+            case MENU_ODJAVA:
+                Authentication.setAccessToken(this, "", "AUTH_COOKIE"); //pobrisi auth token
+                Authentication.setAccessToken(this, "", "CURRENT_USER");
+                finish(); // zaključi aktivnost
+                Intent intent_odjava = new Intent(this, LoginActivity.class); //preusmeri na prijavo
+                startActivity(intent_odjava);
+                return true;
+        }
+        return true;
     }
 }
