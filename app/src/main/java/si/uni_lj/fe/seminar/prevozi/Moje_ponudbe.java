@@ -1,13 +1,11 @@
 package si.uni_lj.fe.seminar.prevozi;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -57,6 +55,7 @@ public class Moje_ponudbe extends Main_page {
             }
             return seznam_rezervacij;
         } catch (JSONException e) {
+            Log.d("myTag", String.valueOf(e));
             e.printStackTrace();
         }
         return new String[1]; //dummy value

@@ -1,27 +1,16 @@
 package si.uni_lj.fe.seminar.prevozi;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.ListView;
-import android.util.Log;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.io.IOException;
-
 import si.uni_lj.fe.seminar.prevozi.ui.login.LoginActivity;
-import si.uni_lj.fe.seminar.prevozi.Authentication;
-import si.uni_lj.fe.seminar.prevozi.DobiRezervacije;
 
 
 public class Main_page extends AppCompatActivity {
@@ -46,9 +35,7 @@ public class Main_page extends AppCompatActivity {
         textView=(TextView)findViewById(R.id.textView);
 
         String auth_cookie = Authentication.getAccessToken(this, "AUTH_COOKIE");
-        //Log.d("MyTag", auth_cookie);
         String current_user = Authentication.getAccessToken(this, "CURRENT_USER");
-        //Log.d("Mytag", current_user);
 
         new AsyncTaskExecutor().execute(new DobiRezervacije(current_user, auth_cookie, activity),
                 (rezultat) -> {fun(rezultat);});
@@ -81,13 +68,6 @@ public class Main_page extends AppCompatActivity {
 
     public void fun (String rezultat) {
         listItem = JSONString2StringArray(rezultat);
-
-//        try {
-//            Log.d("Mytag3", listItem[0]);
-//        }
-//        catch (Exception e) {
-//            Log.d("myTag", String.valueOf(e));
-//        }
 
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.my_list, listItem);
